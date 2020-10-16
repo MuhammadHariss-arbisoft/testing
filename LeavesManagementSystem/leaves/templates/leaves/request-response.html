@@ -1,0 +1,23 @@
+{% extends "leaves/base.html" %}
+{% load crispy_forms_tags %}
+
+{% block body %}
+
+<div class="container mt-5 text-center">
+<form class="text-center border bg-whitesmoke p-5" method="POST">
+    <p class="h4 mb-4">Leave Response</p>
+    <span>Applier</span>
+    <input type="text" class="form-control mb-4" placeholder="Applier" value="{{applier}}" disabled>
+    <span>Reason</span>
+    <input type="text" class="form-control mb-4" placeholder="Reason" value="{{reason}}" disabled>
+
+    {% csrf_token %}
+    {{ form|crispy }}
+
+    <div class="container mt-5 text-center">
+
+        <button class="btn bg-dark-blue fg-white btn-block" type="submit">Submit</button>
+</form>
+</div>
+
+{% endblock body %}

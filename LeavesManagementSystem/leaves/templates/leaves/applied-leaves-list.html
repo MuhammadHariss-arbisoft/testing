@@ -1,0 +1,52 @@
+{% extends "leaves/base.html" %}
+
+{% block body %}
+
+<div class="container mt-5 text-center">
+    <h1>Leave Requests</h1>
+    <td><a href="{% url 'leave-request-create' %}" class="btn btn-success pull-right" type="submit">Apply Leave</a></td>
+    <table class="table table-striped bg-whitesmoke">
+      <thead class="bg-dark-blue fg-white">
+        <tr>
+            <th>Approver</th>
+            <th>Date</th>
+            <th>Reason</th>
+            <th>Rejection Reason</th>
+            <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+          {% for leave_request in leave_requests %}
+            <tr>
+              <td>{{leave_request.approver.username}}</td>
+              <td>{{leave_request.date}}</td>
+              <td> <p> {{leave_request.reason}} </p></td>
+              <td>{{leave_request.rejection_reason}}</td>
+              <td class="{{ leave_request.status }}">{{leave_request.status}}</td>
+            </tr>
+          {% endfor %}
+          {% if not leave_requests.count %}
+            <tr>
+                <td class="lead" colspan="5">No Request</td>
+            </tr>
+          {% endif %}
+      </tbody>
+    </table>
+
+    <span class="current">
+      Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+    </span>
+    <ul class="pagination justify-content-center">
+      {% if page_obj.has_previous %}
+      <li class="page-item"><a class="page-link" href="?page=1">&laquo; First</a></li>
+      <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
+      {% endif %}
+
+      {% if page_obj.has_next %}
+      <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>
+      <li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Last &raquo;</a></li>
+      {% endif %}
+    </ul>
+  </div>
+
+{% endblock body %}

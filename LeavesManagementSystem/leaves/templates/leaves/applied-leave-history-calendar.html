@@ -1,0 +1,51 @@
+{% extends "leaves/base.html" %}
+
+{% block CSS %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.3.2/main.min.css">
+{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <div id='calendar'></div>
+</div>
+{% endblock %}
+
+{% block JS %}
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.3.2/main.min.js"></script>
+<script>
+
+    document.addEventListener('DOMContentLoaded', function() {
+      var calendarEl = document.getElementById('calendar');
+  
+      var calendar = new FullCalendar.Calendar(calendarEl, {
+        themeSystem: 'bootstrap.lumen',
+        headerToolbar: {
+          left: 'prevYear,prev,next,nextYear today',
+          center: 'title',
+          right: 'dayGridMonth,dayGridWeek,dayGridDay'
+        },
+        contentHeight: 'auto',
+        dayMaxEvents: true,
+        events: [
+        {% for leave in leaves %}
+                    {
+                        title: '{{ leave.reason }}',
+                        start: '{{ leave.date.isoformat }}',
+                        {% if leave.status == "PENDING"  %}
+                            color: '#17a2b8'
+                        {% elif leave.status == "REJECTED" %}
+                            color: 'red'
+                        {% elif leave.status == "APPROVED" %}
+                            color: 'green'
+                        {% endif %}
+                    },
+        {% endfor %}
+        ],
+      });
+  
+      calendar.render();
+    });
+
+  </script>
+{% endblock %}
+

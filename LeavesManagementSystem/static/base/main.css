@@ -1,0 +1,125 @@
+body{
+    font-family: "Times New Roman", Times, serif;
+}
+
+.mx-wd-4{
+    max-width: 40%;
+}
+
+.mx-wd-6{
+    max-width: 40%;
+}
+
+.mn-wd-6{
+    min-width: 100%;
+}
+
+.wd-8{
+    width: 60%;
+}
+
+.mx-wd-mc{
+    max-width: max-content;
+}
+
+.mn-wd-mnc{
+    min-width: min-content;
+}
+
+.bg-whitesmoke{
+    background-color: whitesmoke;
+}
+
+.rd-15{
+    border-radius: 15px;
+}
+
+.sidenav {
+    
+  height: 100%;
+  width: 35px;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  overflow-x: hidden; 
+  padding-top: 120px;
+  transition: 0.5s;
+  white-space: nowrap;
+}
+
+.icon{
+    vertical-align: middle;
+}
+
+.sidenav a {
+   padding-left: 4%;
+   text-decoration: none;
+   font-size: 25px;
+   color: white;
+   display: block;
+   transition: 0.3s;
+   margin-top: 15%;
+   border-bottom: 2px solid whitesmoke;
+}
+
+.sidenav a span{
+    margin-left: 5%;
+    vertical-align: middle;
+}
+
+.sidenav a:hover {
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.sidenav .closebtn {
+  position: absolute;
+  top: 0;
+  right: 25px;
+  font-size: 36px;
+  margin-left: 50px;
+}
+
+#main {
+  transition: margin-left .5s;
+  padding: 20px;
+  margin-left: 35px;
+}
+
+.fg-white{
+    color: white;
+}
+@media screen and (max-height: 450px) {
+    .sidenav {padding-top: 15px;}
+    .sidenav a {font-size: 18px;}
+}
+
+.menueTxt{
+    font-size: large;
+}
+
+.PENDING{ 
+    color:#17a2b8;
+}
+.APPROVED{ 
+    color: green;
+}
+.REJECTED{ 
+    color: red;
+}
+
+td{
+    word-break: break-all;
+}
+
+.bg-dark-blue{
+    background-color: #2C3E50;
+}
+
+.no-text-hover{
+    color: white !important;
+}
+
+.mt-10{
+    margin-top: 10%;
+}

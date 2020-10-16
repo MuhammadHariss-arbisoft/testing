@@ -1,0 +1,26 @@
+{% extends "leaves/base.html" %}
+{% load crispy_forms_tags %}
+{% block body %}
+
+<div class="container mt-5 text-center">
+<form class="text-center border bg-whitesmoke p-5" method="POST">
+    <p class="h4 mb-4">Apply Leave</p>
+    
+    <div class="form-group">
+        <div class="input-group">
+            <label class="control-label col-sm-12">Approver</label>
+            <div class="col-sm-12 ">
+                <input type="text" class="form-control mb-4" placeholder="Approver" value="{{approver}}" disabled>
+            </div>
+        </div>
+    </div>
+
+    {% csrf_token %}
+    {{ form|crispy }}
+
+    <div class="container mt-5 text-center">
+        <button class="btn bg-dark-blue fg-white my-4 btn-block" type="submit">Submit</button>
+    </div>
+</form>
+</div>
+{% endblock body %}

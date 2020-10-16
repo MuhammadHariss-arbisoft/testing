@@ -1,0 +1,47 @@
+{% load static %}
+{% load crispy_forms_tags %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="{% static 'base/main.css' %}">
+    <title>Login</title>
+</head>
+<body>
+    <div class="container col-lg-4 col-sm-6 col-xs-12 mt-5 bg-whitesmoke rd-15" >
+        {% if messages %}
+        {% for message in messages %}
+          <div class="text-center alert alert-{{ message.tags }}">
+            {{ message }}
+          </div>
+        {% endfor %}
+        {% endif %}
+        
+        <form class="mt-5" method="POST">
+            {% csrf_token %}
+            <fieldset class="form-group center m-auto" >
+                <legend class="border-bottom mt-4 mb-5 text-center">Log In</legend>
+                {{ form|crispy }}
+                
+                <!-- {% for field in form %}
+                <div class="form-group">
+                    <div class="input-group">
+                        <label class="control-label col-sm-2">{{ field.label_tag }}</label>
+                        <div class="col-sm-10">{{ field }}</div>
+                    </div>
+                </div>
+                {% endfor %} -->
+                <!-- <div class="col-sm-12">
+                    <span class="text-danger small">{{ form.non_field_errors }}</span>
+                </div> -->
+                
+                <div class="form-group mt-4 text-center">
+                    <button class="btn col-lg-12 bg-dark-blue fg-white mb-4" type="submit">Login</button>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+</body>
+</html>

@@ -1,0 +1,64 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- CSS files link -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="{% static 'base/main.css' %}">
+    {% block CSS %} {% endblock %}
+
+    {% if user.get_username %}
+        <title>{{ user.get_username }}</title>
+    {% else %}
+        <title>ERP-Leaves</title>
+    {% endif %}
+</head>
+<body>
+    <div id="mySidenav" class="sidenav bg-dark-blue"  onmouseover='maximizeNav()' onmouseout="minimizeNav()">
+
+        {% if perms.leaves.request_leave %}
+            <a class="menueBtn" href="javascript:toggleDashboardBtns()"><i class="icon fa fa-fw fa-list"></i><span class="menueTxt">Dashboard</span> </a>
+            <a class="menueBtn dashboard-menueBtn" href="{% url 'applied-leaves-list' %}"><i class="ml-4 icon fa fa-fw fa-caret-right"></i><span class="menueTxt">Summary</span> </a>
+            <a class="menueBtn dashboard-menueBtn" href="{% url 'applied-leave-history'%}"><i class="ml-4 icon fa fa-fw fa-caret-right"></i><span class="menueTxt">Calendar</span> </a>
+        {% endif %}
+
+        {% if perms.leaves.view_leave_requests %}
+            <a class='menueBtn' href="javascript:toggleRequestBtns()"><i class="icon fa fa-fw fa-envelope-o"></i><span class="menueTxt">Requests</span> </a>
+            <a class='menueBtn request-menueBtn' href="{% url 'leave-requests' %}"><i class="ml-4 icon fa fa-fw fa-caret-right"></i><span class="menueTxt">Pending</span> </a>
+            
+            {% if perms.leaves.view_all_leaves_history %}
+                <a class='menueBtn request-menueBtn' href="{% url 'users-leaves-history'%}"><i class="ml-4 icon fa fa-fw fa-caret-right"></i><span class="menueTxt">History</span> </a>
+            {% elif perms.leaves.view_appliers_leaves_history %}
+                <a class='menueBtn request-menueBtn' href="{%  url 'appliers-leaves-history' %}"><i class="ml-4 icon fa fa-fw fa-caret-right"></i><span class="menueTxt">History</span> </a>
+            {% endif %}
+        
+        {% endif %}
+
+        <a class='menueBtn' href="{% url 'logout' %}"><i class="icon fa fa-fw fa-sign-out"></i><span class="menueTxt">Logout</span> </a>
+    </div>
+
+    <div id="main">
+        {% if messages %}
+        {% for message in messages %}
+        <div class="container text-center alert alert-{{ message.tags }}">
+            {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
+        {% block body %}{% endblock %}
+    </div>
+        
+        
+</body>
+
+    <!-- JS/JQUERY files link -->
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="{% static 'base/main.js' %}"></script>
+    {% block JS %} {% endblock %}
+
+</html>

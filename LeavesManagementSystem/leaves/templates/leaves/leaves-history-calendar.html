@@ -1,0 +1,170 @@
+{% extends "leaves/base.html" %}
+{% load static %}
+
+{% block CSS %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.3.2/main.min.css">
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
+{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+  <form id="usersForm">
+    <div class="input-group col-md-4  mx-auto">
+      <input id="autocomplete" class="form-control py-2" type="text" placeholder="username" >
+      <span class="input-group-append">
+        <button class="btn bg-dark-blue fg-white btn-outline-secondary" type="submit">
+            <i class="fa fa-search"></i>
+        </button>
+      </span>
+    </div>
+    <div id="username_msg" class="text-center d-none text-danger small"></div>
+  </form>
+</div>
+
+<div class="container mt-5">
+  <div id='calendar' class="mt-5"></div>
+</div>
+
+{% include 'leaves/leave-details-modal.html' %}
+
+{% endblock body %}
+
+{% block JS %}
+
+<!-- Full Calendar -->
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.3.2/main.min.js"></script>
+<script>
+var calendar;
+document.addEventListener('DOMContentLoaded', initiateCalendar())
+function initiateCalendar(){
+  var calendarEl = document.getElementById('calendar');
+  calendar = new FullCalendar.Calendar(calendarEl, {
+    themeSystem: 'bootstrap.lumen',
+    headerToolbar: {
+      left: 'prevYear,prev,next,nextYear today',
+      center: 'title',
+      right: 'dayGridMonth,dayGridWeek,dayGridDay'
+    },
+    eventClick: fillAndShowModalWithLeaveDetails,
+    contentHeight: 'auto',
+    dayMaxEvents: true,
+  });
+  calendar.render();
+};
+
+function fillAndShowModalWithLeaveDetails(eventInfo) {
+  populateModalWithLeaveDetails(eventInfo.event.id);
+  $("#leaveDescriptionModal").modal();
+}
+
+function populateModalWithLeaveDetails(id){
+  console.log(leaves[id].fields.reason);
+  $('#modal-reason').val(leaves[id].fields.reason);
+  $('#modal-date').val(leaves[id].fields.date);
+
+  if(leaves[id].fields.status != "REJECTED")
+    $('#rejection-reason-group').addClass('d-none');
+  else
+  {
+    $('#rejection-reason-group').removeClass('d-none');  
+    $('#modal-rejection-reason').val(leaves[id].fields.rejection_reason);
+  }
+}
+
+// Populate FullCalendar with new events
+function  populateCalendarWithNewEvents(){
+  initiateCalendar();
+  
+  $.each(leaves, function(index, leave){
+
+    color = getTextColorByLeaveStatus(leave.fields.status);
+    calendar.addEvent({id: index, title: leave.fields.reason, start: leave.fields.date, color: color});
+  }); 
+}
+
+function getTextColorByLeaveStatus(status){
+  if(status == 'PENDING')
+    return '#17a2b8';
+  else if(status == 'APPROVED')
+    return  'green';
+  else if(status == 'REJECTED')
+    return  'red';
+}
+
+</script>
+
+<!-- AJAX Call -->
+<script>
+  var leaves;
+
+  // Request server for particular user's leaves details
+  $('#usersForm').submit( function(e){
+    e.preventDefault();
+    username = $('#autocomplete').val().toString();
+
+    if(username.length == 0)
+    {
+      initiateCalendar();
+      displayUsernameErrorMsg('No username specified!');
+      return;
+    }
+    url = getRequestUrlForLeaveDetails(username);
+
+    $.ajax({
+      type: "GET",
+      url: url,
+      success: successUserLeavesDetailsResponse,
+      error: failureUserLeavesDetailsResponse
+    });
+  });
+
+function successUserLeavesDetailsResponse(serverRespondedLeaves){
+  hideUsernameErrorMsg();
+  leaves = serverRespondedLeaves;
+  populateCalendarWithNewEvents();
+  console.log(leaves);
+}
+
+function failureUserLeavesDetailsResponse(serverResponse){
+  initiateCalendar();
+  displayUsernameErrorMsg(serverResponse.responseJSON.error);
+}
+ 
+function getRequestUrlForLeaveDetails(username){
+  url = '{{ leave_detail_ajax_url }}';
+  console.log(url);
+  url = url.replace(/123/, username);
+  console.log(url);
+
+  return url;
+}
+
+function displayUsernameErrorMsg(msg){
+  $("#username_msg").text(msg);
+  showUsernameErrorMsg();
+}
+
+function hideUsernameErrorMsg(){
+  $("#username_msg").addClass('d-none');
+}
+function showUsernameErrorMsg(){
+  $("#username_msg").removeClass('d-none');
+}
+
+</script>
+
+
+<!-- AUTO-COMPLETE -->
+
+<script src="//code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script>
+var username_tags = [
+{% for user in users %}
+  "{{user.username}}",
+  {% endfor %}
+];
+
+$( "#autocomplete" ).autocomplete({ source: username_tags });
+</script>
+
+{% endblock %}
